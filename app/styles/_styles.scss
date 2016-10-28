@@ -56,7 +56,11 @@ h4 {
 }
 
 .food-menu {
-
+  .item-title {
+    .item-price {
+      float: right;
+    }
+  }
 }
 
 .foreground {
