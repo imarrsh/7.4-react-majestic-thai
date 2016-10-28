@@ -4,5 +4,6 @@ require('./router');
 
 $(function(){
   // backbone history: router
+  // TODO: replace with react router
   Backbone.history.start();
 }());

@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 
 var AppRouter = Backbone.Router.extend({
-  routes :{
+  routes: {
     '': 'index'
   },
   index: function(){

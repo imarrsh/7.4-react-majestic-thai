@@ -2,11 +2,11 @@
 
 var Backbone = require('backbone');
 
-var MenuItem = Backbone.Router.extend({
-
+var MenuItem = Backbone.Model.extend({
+  idAttribute: '_id'
 });
 
-var MenuCollection = Backbone.Router.extend({
+var MenuCollection = Backbone.Collection.extend({
   model: MenuItem,
   url: 'https://tiny-lasagna-server.herokuapp.com/collections/mt-thai-menu'
 });

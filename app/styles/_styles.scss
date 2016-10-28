@@ -1,9 +1,67 @@
+
+// google fonts: Rubik, 300, 400 i, 500 i
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,500i');
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+body {
+  font-family: 'Rubik', Arial, sans-serif;
+}
+
 img {
   max-width: 100%;
+}
+
+.hero {
+  height: 300px;
+  background: #E88734;
+}
+
+.order-menu {
+  margin-top: -300px;
+  
+}
+
+h1, h2, h3 {
+  color: #E88734;
+  font-weight: 400;    
+}
+h1 {
+  margin-top: 0;
+  font-size: 36px;
+}
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+h4 {
+  font-size: 18px;
+}
+
+.main-heading {
+  h1 {
+    margin: 80px 0;
+    font-weight: 300;
+    font-size: 62px;
+    color: white;
+  }
+}
+
+.food-menu {
+
+}
+
+.foreground {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(0,0,0, 0.2);
+  padding: 15px;
 }
