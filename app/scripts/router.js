@@ -1,11 +1,25 @@
 var Backbone = require('backbone');
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+var AppContainer = require('./components/app.jsx').AppContainer;
+
+var MenuCollection = require('./models/menu').MenuCollection;
 
 var AppRouter = Backbone.Router.extend({
   routes: {
-    '': 'index'
+    '': 'index',
+    'kitchen/': 'kicthen'
+  },
+  initialize: function(){
+    
   },
   index: function(){
-    console.log('index route');
+
+    ReactDOM.render(
+      React.createElement(AppContainer, {router: this}),
+      document.getElementById('app')
+    );
   }
 });
 

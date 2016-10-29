@@ -3,7 +3,23 @@
 var Backbone = require('backbone');
 
 var Order = Backbone.Model.extend({
+  defaults: {
+    name: '',
+    method: "Pick-up",
+    items : []
+  },
   idAttribute: '_id'
+  // orderTotal: function(){
+  //   var tax = 0.8;
+  //   var itemsTotal = this.items.map(function(item){
+  //     return item.price;
+  //   }).reduce(function(sum, val){
+  //     return sum + val;
+  //   }, 0);
+
+  //   return itemsTotal * tax;
+  // }
+
 });
 
 var OrderCollection = Backbone.Collection.extend({

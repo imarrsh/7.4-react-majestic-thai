@@ -8,8 +8,9 @@
   </head>
   <body>
 
-    <div id="app">
-
+    <div id="app"></div>
+    
+    <div id="mockup" style="display: none;">
       <div class="wrapper">
 
         <header class="hero">
@@ -38,31 +39,110 @@
                   </div>
                   <div class="row">
                    <div class="col-xs-12">
-                      <h3 class="item-title">Pad Thai <span class="item-price">$8.99</span></h3>
-                      <h5>Dinner</h5>
-                      <p>One of the most famous Thai rice noodles dish cooked with egg, bean spouts, tofu and sprinkled with ground peanut.</p>
+                      <div class="menu-item">
+                        <h3 class="item-title">Pad Thai <span class="item-price">$8.99</span></h3>
+                        <h5>Dinner</h5>
+                        <p class="item-description">
+                          One of the most famous Thai rice noodles dish cooked with egg, bean spouts, tofu and sprinkled with ground peanut.
+                          <button class="btn btn-add">Add</button>
+                        </p>
+                      </div>
                    </div>
                   </div>
                 </div>
+
 
               </div>
               <!-- order ticket -->
               <div class="col-md-4">
                 <div class="order-ticket foreground">
-                  <div class="row">
-                   <div class="col-xs-12">
-                      <h1>Your Order</h1>
-                   </div>
-                  </div>
-                  <div class="row">
-                   <div class="col-xs-12">
-                    <h3>Pad Thai <small>$8.99</small></h3>
-                   </div>
-                  </div>
+
+                  <form action="" id="ticket-form">
+                    
+                    <div class="row">
+                     <div class="col-xs-12">
+                        <h1>Your Order</h1>
+                     </div>
+                    </div>
+                    <!-- -->
+                    <div class="row">
+                     <div class="col-xs-12">
+                        <input type="text" class="form-control" placeholder="Your name, please" required />
+                     </div>
+                    </div>
+                    <!-- delivery or takeout? -->
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="order-method">
+                          <label for="pickup" class="radio-inline">
+                            <input id="pickup" type="radio" name="method" value="pickup" class="" />
+                            Pick-up
+                          </label>
+                          <label for="delivery" class="radio-inline">
+                            <input id="delivery" type="radio" name="method" value="delivery" class="" />
+                            Delivery
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- order headings -->
+                    <div class="row">
+                      <div class="col-xs-12">
+
+                      </div>
+                    </div>
+                    <!-- order listing heading -->
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="ticket-heading">
+                          <h4 class="items-label">Item</h4>
+                          <h4 class="items-price">Price</h4>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- order listing -->
+                    <div class="row">
+                     <div class="col-xs-12">
+
+                      <div class="order-item-list">
+
+                          <div class="order-item">
+                            <h4 class="order-item-name">Pad Thai <small>$8.99</small></h4>
+                            <input type="text" name="order-item" value="Pad Thai" disabled>
+                            <input type="text" name="order-item-quantity" value="1" disabled>
+                          </div>                         
+
+                      </div>
+
+                     </div>
+                    </div>
+
+                    <!-- order subtotal, tax and total -->
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="order-totals">
+                          <h5 class="order-subtotal">Subtotal <span>$26.79</span></h5>
+                          <h5 class="order-tax">Tax <span>$2.43</span></h5>
+                          <h4 class="order-total">Total <span>$29.22</span></h4>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- order submit-->
+                    <div class="row">
+                     <div class="col-xs-12">
+                       <input type="submit" class="btn btn-success order-submit" value="Place Order" class="form-control">
+                     </div>
+                    </div>
+
+                  </form>
+
                 </div>
               </div>
 
             </div>
+            <!-- end container -->
+
           </div>
         </section>
 

@@ -10,6 +10,7 @@
 
 body {
   font-family: 'Rubik', Arial, sans-serif;
+  color: #454545;
 }
 
 img {
@@ -18,16 +19,21 @@ img {
 
 .hero {
   height: 300px;
-  background: #E88734;
+  box-shadow: inset 0 0 100px rgba(0,0,0, 0.3);
+  background: {
+    image: url('../images/noodle-soup.jpg');
+    size: cover;
+    position: center center;
+    color: $thai-orange;
+  }
 }
 
 .order-menu {
   margin-top: -300px;
-  
 }
 
 h1, h2, h3 {
-  color: #E88734;
+  color: $thai-orange;
   font-weight: 400;    
 }
 h1 {
@@ -52,14 +58,74 @@ h4 {
     font-weight: 300;
     font-size: 62px;
     color: white;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.5);
   }
 }
 
 .food-menu {
+  font-size: 18px;
+  .menu-item {
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 16px;
+  }
   .item-title {
     .item-price {
       float: right;
     }
+  }
+  .btn-add {
+    float: right;
+    background: $thai-orange;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 8px;
+    margin-left: 20px;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.order-ticket {
+  .order-item {
+    padding-bottom: 16px;
+    .order-item-name {
+      small {
+        float: right;
+      }
+    }
+  }
+  .ticket-heading{
+    border-bottom: 1px solid $thai-orange;
+    h4 {
+      display: inline-block;
+    }
+    .items-price {
+      float: right;
+    }
+  }
+}
+
+.order-item-list {
+  border-bottom: 1px solid $thai-orange;
+}
+
+.order-method {
+  padding: 20px 0;
+}
+
+.order-submit{
+  margin-top: 20px;
+}
+
+.order-totals {
+  margin-top: 16px;
+  .cost {
+    float: right;
+  }
+  .order-total {
+    margin-top: 20px;
   }
 }
 
@@ -68,4 +134,12 @@ h4 {
   border-radius: 10px;
   box-shadow: 0 0 6px rgba(0,0,0, 0.2);
   padding: 15px;
+}
+
+.cf {
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
 }
