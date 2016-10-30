@@ -2,13 +2,37 @@
 
 var Backbone = require('backbone');
 
-var Order = Backbone.Model.extend({
+// keep track of items added to the order
+var ItemToOrder = Backbone.Model.extend({
   defaults: {
     name: '',
-    method: "Pick-up",
-    items : []
+    price: 0,
+    quantity: 1
   },
-  idAttribute: '_id'
+  idAttribute: 'id'
+});
+
+var ItemsToOrderCollection = Backbone.Collection.extend({
+  model: ItemToOrder
+});
+
+
+// the order model itself
+var OrderModel = Backbone.Model.extend({
+  initialize: function(){
+    this.items = new ItemsToOrderCollection();
+    // this.items.on('add remove reset', this.updateOrder, this);
+  },
+  defaults: function(){
+    return {
+      name: '',
+      method: 'Pick-up',
+    };
+  },
+  updateOrder: function() {
+    // this.set("items", this.tags.pluck("item"));
+  },
+  idAttribute: '_id',
   // orderTotal: function(){
   //   var tax = 0.8;
   //   var itemsTotal = this.items.map(function(item){
@@ -20,16 +44,19 @@ var Order = Backbone.Model.extend({
   //   return itemsTotal * tax;
   // }
 
+
 });
 
 var OrderCollection = Backbone.Collection.extend({
-  model: Order,
+  model: OrderModel,
   url: 'https://tiny-lasagna-server.herokuapp.com/collections/mt-thai-kitchen'
 });
 
 module.exports = {
-  MenuItem: MenuItem,
-  MenuCollection: MenuCollection
+  ItemToOrder: ItemToOrder,
+  ItemsToOrderCollection: ItemsToOrderCollection,
+  OrderModel: OrderModel,
+  OrderCollection: OrderCollection
 };
 
 // Sample Order Output:

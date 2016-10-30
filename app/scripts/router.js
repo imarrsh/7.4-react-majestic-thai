@@ -12,7 +12,7 @@ var AppRouter = Backbone.Router.extend({
     'kitchen/': 'kicthen'
   },
   initialize: function(){
-    
+
   },
   index: function(){
 

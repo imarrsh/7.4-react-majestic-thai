@@ -3,7 +3,15 @@
 var Backbone = require('backbone');
 
 var MenuItem = Backbone.Model.extend({
-  idAttribute: '_id'
+  idAttribute: '_id',
+  itemSelected: function(){
+    // only give back things pertinent for an order
+    return {
+      id: this.get('_id'),
+      name: this.get('name'),
+      price: this.get('price')
+    };
+  }
 });
 
 var MenuCollection = Backbone.Collection.extend({

@@ -1,6 +1,11 @@
 var React = require('react');
+// require('backbone-react-component');
 
 var MenuCollection = require('../models/menu').MenuCollection;
+
+var ItemToOrder = require('../models/kitchen').ItemToOrder;
+var ItemsToOrderCollection = require('../models/kitchen').ItemsToOrderCollection;
+var OrderModel = require('../models/kitchen').OrderModel;
 
 var AppWrapper = require('./layout/app-wrapper.jsx').AppWrapper;
 var Row = require('./layout/app-wrapper.jsx').Row;
@@ -8,32 +13,31 @@ var Row = require('./layout/app-wrapper.jsx').Row;
 // plain heading object
 var RestuarantHeading = function(props){
   return (
-    <div className="row">
+    <Row>
       <div className="col-xs-12">
         <div className="main-heading">
           <h1>Majestic Thai</h1>
         </div>
       </div>
-    </div>
+    </Row>
   );
 };
 
 var MenuItem = React.createClass({
+  // mixins: [Backbone.React.Component.mixin],
   handleAddItem: function(e){
-    console.log(this.props.model)
-    
-    // this.props.addItem();
+    this.props.addItemToOrder(this.props.model);
   },
   render: function(){
-    // console.log(this.props.name)
+    var model = this.props.model;
     return(
       <Row>
         <div className="col-xs-12">
           <div className="menu-item cf">
-            <h3 className="item-title">{this.props.name} <span className="item-price">{this.props.price}</span></h3>
-            <h5>{this.props.category}</h5>
+            <h3 className="item-title">{model.get('name')} <span className="item-price">{model.get('price')}</span></h3>
+            <h5>{model.get('category')}</h5>
             <p className="item-description">
-              {this.props.description}
+              {model.get('description')}
               <button onClick={this.handleAddItem} className="btn btn-add">Add</button>
             </p>
           </div>
@@ -45,15 +49,13 @@ var MenuItem = React.createClass({
 
 var MenuList = React.createClass({
   render: function(){
+    var self = this;
     var menuItems = this.props.menu.map(function(menuItem){
       return(
         <MenuItem
           key={menuItem.get('_id')}
-          name={menuItem.get('name')}
-          category={menuItem.get('category')}
-          price={menuItem.get('price')}
-          description={menuItem.get('description')}
           model={menuItem}
+          addItemToOrder={self.props.addItemToOrder}
         />
       );
     });
@@ -173,6 +175,8 @@ var OrderTicket = React.createClass({
   }
 });
 
+
+// parent container for all the things
 var AppContainer = React.createClass({
   getInitialState: function(){
     self = this;
@@ -181,10 +185,23 @@ var AppContainer = React.createClass({
     menu.fetch().then(function(data){
       self.setState({collection: menu})
     });
+  
+    var customerOrder = new ItemsToOrderCollection();
 
     return {
-      collection: menu
+      collection: menu,
+      customerOrder : customerOrder
     }
+  },
+  addItemToOrder: function(menuItem){
+    // we just need name + price of the model
+    // console.log('addItemToOrder', menuItem.itemSelected());
+    // this.setState({customerOrder: this.state.customerOrder.add(menuItem.itemSelected()) });
+    this.state.customerOrder.add(menuItem.itemSelected());
+    console.log(this.state.customerOrder);
+  },
+  submitOrder: function(){
+    // submit order to OrderCollection
   },
   render: function(){
     return (
@@ -196,7 +213,7 @@ var AppContainer = React.createClass({
             <RestuarantHeading />
 
             <Row>
-              <MenuList menu={this.state.collection}/>
+              <MenuList menu={this.state.collection} addItemToOrder={this.addItemToOrder}/>
               <OrderTicket />
             </Row>
 
