@@ -1,5 +1,6 @@
+var Backbone = require('backbone');
 var React = require('react');
-// require('backbone-react-component');
+require('backbone-react-component');
 
 var MenuCollection = require('../models/menu').MenuCollection;
 
@@ -24,7 +25,7 @@ var RestuarantHeading = function(props){
 };
 
 var MenuItem = React.createClass({
-  // mixins: [Backbone.React.Component.mixin],
+  mixins: [Backbone.React.Component.mixin],  
   handleAddItem: function(e){
     this.props.addItemToOrder(this.props.model);
   },
@@ -48,9 +49,11 @@ var MenuItem = React.createClass({
 });
 
 var MenuList = React.createClass({
+  mixins: [Backbone.React.Component.mixin],    
   render: function(){
     var self = this;
-    var menuItems = this.props.menu.map(function(menuItem){
+    var collection = this.getCollection();
+    var menuItems = collection.map(function(menuItem){
       return(
         <MenuItem
           key={menuItem.get('_id')}
@@ -77,7 +80,47 @@ var MenuList = React.createClass({
   }
 });
 
+
+
+// order listing
+// <input type="text" name="order-item" value="Pad Thai" disabled />
+// <input type="text" name="order-item-quantity" value="1" disabled />
+var OrderTicketListing = React.createClass({
+  mixins: [Backbone.React.Component.mixin],  
+  render: function(){
+    console.log(this.props.orderItems);
+    var orderItems = this.props.orderItems.map(function(item){
+      return (
+        <div key={item.get('id')} className="order-item">
+          <h4 className="order-item-name">{item.get('name')} <small>{item.get('price')}</small></h4>
+        </div>
+      );
+    });
+
+    return (
+      <Row>
+        <div className="col-xs-12">
+          <div className="order-item-list">
+
+            {orderItems}                         
+
+          </div>
+        </div>
+      </Row>
+    );
+  }
+});
+
 var OrderTicket = React.createClass({
+  mixins: [Backbone.React.Component.mixin],    
+  getInitialState: function(){
+    return {
+      orderName: ''
+    }
+  },
+  handleNameChange: function(e){
+    this.setState({orderName: e.target.value});
+  },
   render: function(){
     return(
       <div className="col-md-4">
@@ -93,7 +136,7 @@ var OrderTicket = React.createClass({
             {/* Name */}
             <div className="row">
               <div className="col-xs-12">
-                <input type="text" className="form-control" placeholder="Your name, please" required />
+                <input type="text" onChange={this.handleNameChange} value={this.state.orderName} className="form-control" placeholder="Your name, please" required />
               </div>
             </div>
             {/*  delivery or takeout? */}
@@ -122,21 +165,8 @@ var OrderTicket = React.createClass({
             </div>
 
             {/* order listing */}
-            <div className="row">
-              <div className="col-xs-12">
+            <OrderTicketListing orderItems={this.props.orderItems} />
 
-              <div className="order-item-list">
-
-                  <div className="order-item">
-                    <h4 className="order-item-name">Pad Thai <small>$8.99</small></h4>
-                    <input type="text" name="order-item" value="Pad Thai" disabled />
-                    <input type="text" name="order-item-quantity" value="1" disabled />
-                  </div>                         
-
-              </div>
-
-              </div>
-            </div>
             {/* order subtotal, tax and total */}
             <div className="row">
 
@@ -175,30 +205,36 @@ var OrderTicket = React.createClass({
   }
 });
 
-
+// ####################################
 // parent container for all the things
+// ####################################
+
 var AppContainer = React.createClass({
+  mixins: [Backbone.React.Component.mixin],
+  getDefaultProps: function(){
+    var menu = new MenuCollection();
+    menu.fetch();
+
+    return {
+      collection: menu
+    }
+  },
   getInitialState: function(){
     self = this;
-
-    var menu = new MenuCollection();
-    menu.fetch().then(function(data){
-      self.setState({collection: menu})
-    });
   
     var customerOrder = new ItemsToOrderCollection();
 
     return {
-      collection: menu,
       customerOrder : customerOrder
     }
   },
   addItemToOrder: function(menuItem){
-    // we just need name + price of the model
+    // we just need name,price & id of the model
     // console.log('addItemToOrder', menuItem.itemSelected());
-    // this.setState({customerOrder: this.state.customerOrder.add(menuItem.itemSelected()) });
-    this.state.customerOrder.add(menuItem.itemSelected());
-    console.log(this.state.customerOrder);
+    var newItem = menuItem.itemSelected();
+    // not sure if this is good, updating state directly and then setting it
+    this.state.customerOrder.add(newItem);
+    this.setState({customerOrder: this.state.customerOrder});
   },
   submitOrder: function(){
     // submit order to OrderCollection
@@ -213,8 +249,8 @@ var AppContainer = React.createClass({
             <RestuarantHeading />
 
             <Row>
-              <MenuList menu={this.state.collection} addItemToOrder={this.addItemToOrder}/>
-              <OrderTicket />
+              <MenuList menu={this.props.collection} addItemToOrder={this.addItemToOrder}/>
+              <OrderTicket orderItems={this.state.customerOrder}/>
             </Row>
 
           </div>

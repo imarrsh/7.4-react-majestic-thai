@@ -20,7 +20,7 @@ var ItemsToOrderCollection = Backbone.Collection.extend({
 // the order model itself
 var OrderModel = Backbone.Model.extend({
   initialize: function(){
-    this.items = new ItemsToOrderCollection();
+    // this.items = new ItemsToOrderCollection();
     // this.items.on('add remove reset', this.updateOrder, this);
   },
   defaults: function(){
