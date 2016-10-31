@@ -89,6 +89,10 @@ var OrderTicket = React.createClass({
       method: this.state.orderMethod
     };
     this.props.submitOrder(ticket);
+    this.setState({
+      orderName: '',
+      orderMethod: 'pickup'
+    })
   },
   handleMethodChange: function(e){
     // console.log('method changed', e.target.value);

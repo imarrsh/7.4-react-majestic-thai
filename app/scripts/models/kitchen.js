@@ -8,11 +8,9 @@ var OrderModel = Backbone.Model.extend({
     return {
       name: '',
       method: 'pickup',
+      invoice: 0
     };
   },
-  // updateOrder: function() {
-  //   // this.set("items", this.tags.pluck("item"));
-  // },
   idAttribute: '_id'
 
 });

@@ -5,6 +5,15 @@ function AppWrapper(props){
       <div className="wrapper">
         <header className="hero"></header>
         {props.children}
+        <footer>
+          <div className="container">
+            <div className="row">
+              <h4>
+                See what&rsquo;s going on in the <a href="#kitchen/">kitchen</a>!
+              </h4>
+            </div>
+          </div>
+        </footer>
       </div>
     );
 }
