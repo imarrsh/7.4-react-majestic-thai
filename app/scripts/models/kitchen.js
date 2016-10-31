@@ -13,7 +13,27 @@ var ItemToOrder = Backbone.Model.extend({
 });
 
 var ItemsToOrderCollection = Backbone.Collection.extend({
-  model: ItemToOrder
+  model: ItemToOrder,
+  initialize: function(){},
+  orderTotals: function(){
+    var tax = 0.08,
+        calcSubtotal = this.models
+          .map(function(model){
+            return model.get('price');
+          })
+          .reduce(function(sum, val){
+            return sum + val;
+          }, 0),
+        calculatedTax = calcSubtotal * tax;
+
+    // console.log(itemsTotal);
+    return {
+      subtotal: calcSubtotal.toFixed(2),
+      calculatedTax: calculatedTax.toFixed(2),
+      finalTotal: (calcSubtotal + calculatedTax).toFixed(2)
+    };
+  }
+
 });
 
 
@@ -26,24 +46,13 @@ var OrderModel = Backbone.Model.extend({
   defaults: function(){
     return {
       name: '',
-      method: 'Pick-up',
+      method: 'pickup',
     };
   },
-  updateOrder: function() {
-    // this.set("items", this.tags.pluck("item"));
-  },
-  idAttribute: '_id',
-  // orderTotal: function(){
-  //   var tax = 0.8;
-  //   var itemsTotal = this.items.map(function(item){
-  //     return item.price;
-  //   }).reduce(function(sum, val){
-  //     return sum + val;
-  //   }, 0);
-
-  //   return itemsTotal * tax;
-  // }
-
+  // updateOrder: function() {
+  //   // this.set("items", this.tags.pluck("item"));
+  // },
+  idAttribute: '_id'
 
 });
 

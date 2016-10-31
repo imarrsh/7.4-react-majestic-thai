@@ -2,12 +2,15 @@ var Backbone = require('backbone');
 var React = require('react');
 require('backbone-react-component');
 
+// menu config
 var MenuCollection = require('../models/menu').MenuCollection;
-
+// track order items
 var ItemToOrder = require('../models/kitchen').ItemToOrder;
 var ItemsToOrderCollection = require('../models/kitchen').ItemsToOrderCollection;
+// manage orders 
 var OrderModel = require('../models/kitchen').OrderModel;
-
+var OrderCollection = require('../models/kitchen').OrderCollection;
+// layout components
 var AppWrapper = require('./layout/app-wrapper.jsx').AppWrapper;
 var Row = require('./layout/app-wrapper.jsx').Row;
 
@@ -81,28 +84,63 @@ var MenuList = React.createClass({
 });
 
 
+// order subtotal, tax and total
+var OrderTicketPricing = React.createClass({
+  render: function(){
+    // order subtotal, tax and total
+    var orderTotals = this.props.orderItems.orderTotals();
+    // console.log(orderTotals);
+    return (
+      <Row>
+
+        <div className="col-xs-12">
+          <div className="order-totals">
+
+            <h5 className="order-subtotal">
+              Subtotal 
+              <span className="cost">${orderTotals.subtotal}</span>
+            </h5>
+            <h5 className="order-tax">
+              Tax 
+              <span className="cost">${orderTotals.calculatedTax}</span>
+            </h5>
+            <h4 className="order-total">
+              Total 
+              <span className="cost">${orderTotals.finalTotal}</span>
+            </h4>
+            
+          </div>
+        </div>
+        
+      </Row>
+    );
+  }
+});
 
 // order listing
-// <input type="text" name="order-item" value="Pad Thai" disabled />
-// <input type="text" name="order-item-quantity" value="1" disabled />
 var OrderTicketListing = React.createClass({
-  mixins: [Backbone.React.Component.mixin],  
+  mixins: [Backbone.React.Component.mixin],
+  getInitialState: function(){
+    return {
+      listing: 'You have no items yet.'
+    }
+  },
   render: function(){
-    console.log(this.props.orderItems);
-    var orderItems = this.props.orderItems.map(function(item){
+    var self = this;
+    var orderItems = this.props.orderItems.length ? this.props.orderItems.map(function(item){
       return (
-        <div key={item.get('id')} className="order-item">
+        <div key={item.get('id') || item.cid} className="order-item">
           <h4 className="order-item-name">{item.get('name')} <small>{item.get('price')}</small></h4>
         </div>
       );
-    });
+    }) : <h4 className="order-item-name">{this.state.listing}</h4>;
 
     return (
       <Row>
         <div className="col-xs-12">
           <div className="order-item-list">
 
-            {orderItems}                         
+            {orderItems}
 
           </div>
         </div>
@@ -115,28 +153,48 @@ var OrderTicket = React.createClass({
   mixins: [Backbone.React.Component.mixin],    
   getInitialState: function(){
     return {
-      orderName: ''
+      orderName: '',
+      orderMethod: 'pickup'
     }
   },
   handleNameChange: function(e){
     this.setState({orderName: e.target.value});
+  },
+  handleOrderSubmit: function(e){
+    e.preventDefault();
+
+    var ticket = {
+      name: this.state.orderName,
+      method: this.state.orderMethod
+    };
+    this.props.submitOrder(ticket);
+  },
+  handleMethodChange: function(e){
+    // console.log('method changed', e.target.value);
+    this.setState({orderMethod: e.target.value});
   },
   render: function(){
     return(
       <div className="col-md-4">
         <div className="order-ticket foreground">
 
-          <form action="" id="ticket-form">
+          <form action="" id="ticket-form" onSubmit={this.handleOrderSubmit}>
             
             <div className="row">
               <div className="col-xs-12">
                 <h1>Your Order</h1>
               </div>
             </div>
-            {/* Name */}
+            {/* Name input */}
             <div className="row">
               <div className="col-xs-12">
-                <input type="text" onChange={this.handleNameChange} value={this.state.orderName} className="form-control" placeholder="Your name, please" required />
+                <input type="text" 
+                  onChange={this.handleNameChange} 
+                  value={this.state.orderName} 
+                  className="form-control" 
+                  placeholder="Your name, please" 
+                  required 
+                />
               </div>
             </div>
             {/*  delivery or takeout? */}
@@ -144,11 +202,18 @@ var OrderTicket = React.createClass({
               <div className="col-xs-12">
                 <div className="order-method">
                   <label htmlFor="pickup" className="radio-inline">
-                    <input id="pickup" type="radio" name="method" value="pickup" className="" />
+                    <input id="pickup" 
+                      onChange={this.handleMethodChange} 
+                      defaultChecked={true} 
+                      type="radio" name="method" value="pickup" className="" 
+                    />
                     Pick-up
                   </label>
                   <label htmlFor="delivery" className="radio-inline">
-                    <input id="delivery" type="radio" name="method" value="delivery" className="" />
+                    <input id="delivery" 
+                      onChange={this.handleMethodChange} 
+                      type="radio" name="method" value="delivery" className="" 
+                    />
                     Delivery
                   </label>
                 </div>
@@ -168,32 +233,22 @@ var OrderTicket = React.createClass({
             <OrderTicketListing orderItems={this.props.orderItems} />
 
             {/* order subtotal, tax and total */}
-            <div className="row">
+            <OrderTicketPricing orderItems={this.props.orderItems}/>
 
-              <div className="col-xs-12">
-                <div className="order-totals">
-
-                  <h5 className="order-subtotal">
-                    Subtotal 
-                    <span className="cost">$26.79</span>
-                  </h5>
-                  <h5 className="order-tax">
-                    Tax 
-                    <span className="cost">$2.43</span>
-                  </h5>
-                  <h4 className="order-total">
-                    Total 
-                    <span className="cost">$29.22</span>
-                  </h4>
-                  
-                </div>
-              </div>
-              
-            </div>
             {/* order submit */}
             <div className="row">
               <div className="col-xs-12">
-                <input type="submit" className="btn btn-success order-submit" value="Place Order" />
+                <div className="order-controls">
+                  <input type="reset"
+                    className="btn btn-default order-cancel"
+                    value="Cancel"
+                  />
+                  <input type="submit" 
+                    className="btn btn-success order-submit" 
+                    value="Place Order" 
+                  />
+                </div>
+
               </div>
             </div>
 
@@ -214,9 +269,12 @@ var AppContainer = React.createClass({
   getDefaultProps: function(){
     var menu = new MenuCollection();
     menu.fetch();
+    // instantiate the order collection
+    var orderCollection = new OrderCollection();
 
     return {
-      collection: menu
+      collection: menu,
+      orderCollection: orderCollection
     }
   },
   getInitialState: function(){
@@ -236,8 +294,16 @@ var AppContainer = React.createClass({
     this.state.customerOrder.add(newItem);
     this.setState({customerOrder: this.state.customerOrder});
   },
-  submitOrder: function(){
+  submitOrder: function(ticket){
     // submit order to OrderCollection
+    var order = new OrderModel();
+
+    order.set({
+      'name': ticket.name,
+      'method': ticket.method,
+      'items': this.state.customerOrder.toJSON()
+    });
+    this.props.orderCollection.create(order);
   },
   render: function(){
     return (
@@ -249,8 +315,11 @@ var AppContainer = React.createClass({
             <RestuarantHeading />
 
             <Row>
-              <MenuList menu={this.props.collection} addItemToOrder={this.addItemToOrder}/>
-              <OrderTicket orderItems={this.state.customerOrder}/>
+              <MenuList addItemToOrder={this.addItemToOrder}/>
+              <OrderTicket 
+                orderItems={this.state.customerOrder} 
+                submitOrder={this.submitOrder}
+              />
             </Row>
 
           </div>
