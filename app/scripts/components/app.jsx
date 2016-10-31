@@ -78,6 +78,7 @@ var AppContainer = React.createClass({
       'items': this.state.customerOrder.toJSON()
     });
     this.props.orderCollection.create(order);
+    this.state.customerOrder.reset([]);
   },
   render: function(){
     return (

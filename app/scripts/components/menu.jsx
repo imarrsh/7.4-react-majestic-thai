@@ -21,6 +21,13 @@ var MenuItem = React.createClass({
             <p className="item-description">
               {model.get('description')}
               <button onClick={this.handleAddItem} className="btn btn-add">Add</button>
+              {/* 
+                You could do something like this to forgo the extra method on this component:
+                
+                
+                onClick={ function(){ self.props.addItemToOrder(model) } }
+
+              */}
             </p>
           </div>
         </div>
