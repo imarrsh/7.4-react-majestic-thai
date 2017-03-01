@@ -1,4 +1,5 @@
 var React = require('react');
+var Link = require('react-router').Link;
 
 function AppWrapper(props){
     return(
@@ -9,7 +10,7 @@ function AppWrapper(props){
           <div className="container">
             <div className="row">
               <h4>
-                See what&rsquo;s going on in the <a href="#kitchen/">kitchen</a>!
+                See what&rsquo;s going on in the <Link to="kitchen">kitchen</Link>!
               </h4>
             </div>
           </div>
